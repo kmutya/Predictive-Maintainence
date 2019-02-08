@@ -4,7 +4,7 @@ library(forecast) #to forecast MLP
 library(astsa) #ARIMA 
 library(dplyr) #data cleaning
 library(tseries) #kpss test 
-library(ggplot2)
+library(ggplot2) #plotting
 
 #reading in the final csv file
 getwd()
@@ -88,6 +88,10 @@ forecasts_df$ARIMA_residual = forecasts_df$ARIMA_Forecast - forecasts_df$RUL
 forecasts_df$MLP_residual = forecasts_df$MLP_forecast - forecasts_df$RUL
 write.csv(forecasts_df, 'forecast_small.csv', row.names = F)
 
+
+#Reading in the file with forecasts
+#forecasts_df = read.csv('forecast_small.csv')
+
 #Visualizing our predictions
 #creating a df to organize all residuals by model
 forecast_plot = data.frame(model = c(rep('ARIMA', 9), rep('MLP', 9)))
@@ -96,25 +100,10 @@ forecast_plot$residual = c(forecasts_df[,"ARIMA_residual"], forecasts_df[,"MLP_r
 forecast_plot$Engine_no = c(forecasts_df[,"Engine"], forecasts_df[,"Engine"])
 forecast_plot$RUL = c(forecasts_df[,"RUL"], forecasts_df[,"RUL"])
 
-#plotting
+#plotting the residuals
 ggplot(data = forecast_plot, aes(x = value, y = residual, colour = model)) + geom_point(shape = forecast_plot$model) + 
 ylab('residual')+xlab('fitted value') + geom_hline(yintercept=0, linetype="dashed", color = "red") + 
 ggtitle('Visualization of Residuals') + scale_colour_discrete(name = 'Legend', labels = c('ARIMA Residuals','MLP Residuals')) + 
 geom_text(aes(label=Engine_no) ,hjust=0, vjust=2) + scale_size_continuous(range = c(1, 9))
-
-
-#Cost function
-#x = actual #y = predicted #z= cost
-cf = function(x,y){
-  d = y-x
-  if(d<0){
-    s = exp(-(d/13))-1
-  }
-  else{
-    s = exp(d/10)-1
-  }
-  return(s)
-}
-
 
 
