@@ -1,5 +1,6 @@
 # Predictive-Maintainence
-Forecasting machine failure using a time series approach.
+1. Created a univariate Health Index as a function of many sensors using regression.
+2. Modelled these univariate time series using AutoRegressive Integrated Moving Average (ARIMA) and Shallow Neural Network.
 
 This repository is the code base for this [article](https://kmutya.github.io/predmaintenance/)
 
